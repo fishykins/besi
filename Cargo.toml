@@ -1,0 +1,15 @@
+[package]
+name = "busi"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+bevy_reflect = { version = "0.17", optional = true }
+bevy_math = { version = "0.17", optional = true }
+inventory = "0.3"
+paste = "1.0"
+
+[features]
+default = ["reflect", "position"]
+reflect = ["dep:bevy_reflect"]
+position = ["dep:bevy_math"]
