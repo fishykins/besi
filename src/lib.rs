@@ -16,9 +16,34 @@ pub mod time;
 pub mod velocity;
 pub mod volume;
 
-pub use paste;
+pub(crate) use paste;
 
-pub trait BusiUnit: 'static {
+pub mod prelude {
+    pub use crate::angle::*;
+    pub use crate::density::*;
+    pub use crate::energy::*;
+    pub use crate::flow::*;
+    pub use crate::force::*;
+    pub use crate::length::*;
+    pub use crate::mass::*;
+    #[cfg(feature = "position")]
+    pub use crate::position::*;
+    pub use crate::power::*;
+    pub use crate::pressure::*;
+    pub use crate::temperature::*;
+    pub use crate::time::*;
+    pub use crate::velocity::*;
+    pub use crate::volume::*;
+
+    pub use crate::{BesiUnit, ConstZero};
+}
+
+pub trait ConstZero: 'static {
+    fn zero() -> Self;
+}
+
+
+pub trait BesiUnit: 'static {
     /// The scale factor to convert this unit to the base unit (meters for Length).
     const SCALE_FACTOR: f64;
 }

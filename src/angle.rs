@@ -6,6 +6,14 @@ define_measurement! {
     Angle
 }
 
+impl Angle {
+    pub const NORTH: Self = Self(0.0);
+    pub const EAST: Self = Self(0.5);
+    pub const SOUTH: Self = Self(1.0);
+    pub const WEST: Self = Self(1.5);
+
+}
+
 define_units! { Angle =>
     radian: ("rad", 1.0),
     degree: ("°", PI / 180.0),

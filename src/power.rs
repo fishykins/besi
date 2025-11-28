@@ -9,6 +9,9 @@ define_units! { Power =>
     watt: ("W", 1.0),
     kilowatt: ("kW", 1000.0),
     megawatt: ("MW", 1.0e6),
+    terawatt: ("TW", 1.0e9),
+    gigawatt: ("GW", 1.0e12),
+    exawatt: ("EW", 1.0e15),
     solar_luminosity: ("L☉", 3.846e26),
 }
 

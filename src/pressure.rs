@@ -9,6 +9,7 @@ define_units! { Pressure =>
     pascal: ("Pa", 1.0),
     kilopascal: ("kPa", 1000.0),
     bar: ("bar", 100_000.0),
+    atmosphere: ("atm", 1.013_25_E5),
 }
 
 #[cfg(test)]

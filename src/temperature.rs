@@ -32,14 +32,33 @@ pub trait TemperatureUnit {
 
 impl fmt::Display for Temperature {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let temp_c = self.get::<celsius>();
+        let temp_c = self.get::<degree_celsius>();
         if temp_c.abs() > 100.0 {
             write!(f, "{:.2} {}", self.get::<kelvin>(), kelvin::SYMBOL)
         } else if temp_c.abs() < 1.0 && temp_c.abs() > 1.0e-9 {
             write!(f, "{:.2} {}", self.get::<kelvin>(), kelvin::SYMBOL)
         } else {
-            write!(f, "{:.2} {}", temp_c, celsius::SYMBOL)
+            write!(f, "{:.2} {}", temp_c, degree_celsius::SYMBOL)
         }
+    }
+}
+
+impl serde::Serialize for Temperature {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        self.0.serialize(serializer)
+    }
+}
+
+impl<'de> serde::Deserialize<'de> for Temperature {
+    fn deserialize<De>(deserializer: De) -> Result<Self, De::Error>
+    where
+        De: serde::Deserializer<'de>,
+    {
+        let value: f64 = serde::Deserialize::deserialize(deserializer)?;
+        Ok(Temperature(value))
     }
 }
 
@@ -100,8 +119,8 @@ impl TemperatureUnit for kelvin {
 /// Celsius (°C)
 #[derive(Default, Debug, Clone, Copy)]
 #[allow(non_camel_case_types)]
-pub struct celsius;
-impl TemperatureUnit for celsius {
+pub struct degree_celsius;
+impl TemperatureUnit for degree_celsius {
     fn to_kelvin(value: f64) -> f64 {
         value + 273.15
     }
@@ -114,8 +133,8 @@ impl TemperatureUnit for celsius {
 /// Fahrenheit (°F)
 #[derive(Default, Debug, Clone, Copy)]
 #[allow(non_camel_case_types)]
-pub struct fahrenheit;
-impl TemperatureUnit for fahrenheit {
+pub struct degree_fahrenheit;
+impl TemperatureUnit for degree_fahrenheit {
     fn to_kelvin(value: f64) -> f64 {
         (value - 32.0) * 5.0 / 9.0 + 273.15
     }
@@ -131,28 +150,28 @@ mod tests {
 
     #[test]
     fn conversions() {
-        let temp = Temperature::new::<celsius>(0.0);
+        let temp = Temperature::new::<degree_celsius>(0.0);
         assert_eq!(temp.get::<kelvin>(), 273.15);
-        assert_eq!(temp.get::<celsius>(), 0.0);
-        assert!((temp.get::<fahrenheit>() - 32.0).abs() < 1e-9);
+        assert_eq!(temp.get::<degree_celsius>(), 0.0);
+        assert!((temp.get::<degree_fahrenheit>() - 32.0).abs() < 1e-9);
 
-        let temp = Temperature::new::<fahrenheit>(32.0);
-        assert_eq!(temp.get::<celsius>(), 0.0);
+        let temp = Temperature::new::<degree_fahrenheit>(32.0);
+        assert_eq!(temp.get::<degree_celsius>(), 0.0);
 
         let temp = Temperature::new::<kelvin>(0.0);
-        assert_eq!(temp.get::<celsius>(), -273.15);
+        assert_eq!(temp.get::<degree_celsius>(), -273.15);
     }
 
     #[test]
     fn display() {
-        assert_eq!(format!("{}", Temperature::new::<celsius>(0.0)), "0.00 °C");
-        assert_eq!(format!("{}", Temperature::new::<celsius>(30.0)), "30.00 °C");
+        assert_eq!(format!("{}", Temperature::new::<degree_celsius>(0.0)), "0.00 °C");
+        assert_eq!(format!("{}", Temperature::new::<degree_celsius>(30.0)), "30.00 °C");
         assert_eq!(
-            format!("{}", Temperature::new::<celsius>(100.0)),
+            format!("{}", Temperature::new::<degree_celsius>(100.0)),
             "100.00 °C"
         );
         assert_eq!(
-            format!("{}", Temperature::new::<celsius>(101.0)),
+            format!("{}", Temperature::new::<degree_celsius>(101.0)),
             "374.15 K"
         );
     }

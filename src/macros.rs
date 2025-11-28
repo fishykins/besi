@@ -2,7 +2,7 @@
 macro_rules! define_units {
     ($measurement:ident => $($unit:ident: ($symbol:expr, $factor:expr)),* $(,)?) => {
         $crate::paste::paste! {
-            pub trait [<$measurement Unit>]: $crate::BusiUnit {}
+            pub trait [<$measurement Unit>]: $crate::BesiUnit {}
         }
         $(
             #[allow(non_camel_case_types)]
@@ -10,7 +10,7 @@ macro_rules! define_units {
             pub struct $unit;
 
             $crate::paste::paste! {
-                impl $crate::BusiUnit for $unit { const SCALE_FACTOR: f64 = $factor; }
+                impl $crate::BesiUnit for $unit { const SCALE_FACTOR: f64 = $factor; }
                 impl [<$measurement Unit>] for $unit {}
             }
 
@@ -58,6 +58,33 @@ macro_rules! define_measurement {
             }
         }
 
+        impl $crate::ConstZero for $name {
+            fn zero() -> Self {
+                Self::ZERO
+            }
+        }
+
+        impl serde::Serialize for $name
+        {
+            fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+            where
+                S: serde::Serializer
+            {
+                self.0.serialize(serializer)
+            }
+        }
+
+        impl<'de> serde::Deserialize<'de> for $name
+        {
+            fn deserialize<De>(deserializer: De) -> Result<Self, De::Error>
+            where
+                De: serde::Deserializer<'de>,
+            {
+                let value: f64 = serde::Deserialize::deserialize(deserializer)?;
+                Ok($name(value))
+            }
+        }
+
         impl std::fmt::Display for $name {
             fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                 let value = self.0;
@@ -84,10 +111,23 @@ macro_rules! define_measurement {
             fn add(self, rhs: Self) -> Self::Output { Self(self.0 + rhs.0) }
         }
 
+        impl std::ops::AddAssign for $name {
+            fn add_assign(&mut self, rhs: Self) {
+                self.0 += rhs.0;
+            }
+        }
+
         impl std::ops::Sub for $name {
             type Output = Self;
             fn sub(self, rhs: Self) -> Self::Output { Self(self.0 - rhs.0) }
         }
+
+        impl std::ops::SubAssign for $name {
+            fn sub_assign(&mut self, rhs: Self) {
+                self.0 -= rhs.0;
+            }
+        }
+
 
         impl std::ops::Mul<f64> for $name {
             type Output = Self;
@@ -102,6 +142,14 @@ macro_rules! define_measurement {
         impl std::ops::Div<$name> for $name {
             type Output = f64;
             fn div(self, rhs: Self) -> Self::Output { self.0 / rhs.0 }
+        }
+
+        impl std::cmp::Eq for $name {}
+
+        impl std::cmp::Ord for $name {
+            fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+                self.0.partial_cmp(&other.0).unwrap()
+            }
         }
 
         impl AsRef<f64> for $name { fn as_ref(&self) -> &f64 { &self.0 } }

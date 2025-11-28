@@ -1,11 +1,12 @@
 [package]
-name = "busi"
+name = "besi"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
 bevy_reflect = { version = "0.17", optional = true }
 bevy_math = { version = "0.17", optional = true }
+serde = { version = "1.0", features = ["derive"] }
 inventory = "0.3"
 paste = "1.0"
 

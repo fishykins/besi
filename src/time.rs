@@ -10,6 +10,11 @@ define_units! { Time =>
     millisecond: ("ms", 0.001),
     minute: ("min", 60.0),
     hour: ("h", 3600.0),
+    day: ("d", 86400.0),
+    day_sidereal: ("d'", 86164.09),
+    week: ("w", 604800.0),
+    month: ("mo", 2592000.0),
+    year: ("y", 31536000.0),
 }
 
 #[cfg(test)]
