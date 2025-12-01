@@ -70,10 +70,22 @@ impl std::ops::Add for Temperature {
     }
 }
 
+impl std::ops::AddAssign for Temperature {
+    fn add_assign(&mut self, rhs: Self) {
+        self.0 += rhs.0;
+    }
+}
+
 impl std::ops::Sub for Temperature {
     type Output = Self;
     fn sub(self, rhs: Self) -> Self::Output {
         Self(self.0 - rhs.0)
+    }
+}
+
+impl std::ops::SubAssign for Temperature {
+    fn sub_assign(&mut self, rhs: Self) {
+        self.0 -= rhs.0;
     }
 }
 
@@ -84,10 +96,22 @@ impl std::ops::Mul<f64> for Temperature {
     }
 }
 
+impl std::ops::MulAssign<f64> for Temperature {
+    fn mul_assign(&mut self, rhs: f64) {
+        self.0 *= rhs;
+    }
+}
+
 impl std::ops::Div<f64> for Temperature {
     type Output = Self;
     fn div(self, rhs: f64) -> Self::Output {
         Self(self.0 / rhs)
+    }
+}
+
+impl std::ops::DivAssign<f64> for Temperature {
+    fn div_assign(&mut self, rhs: f64) {
+        self.0 /= rhs;
     }
 }
 

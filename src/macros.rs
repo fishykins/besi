@@ -58,12 +58,6 @@ macro_rules! define_measurement {
             }
         }
 
-        impl $crate::ConstZero for $name {
-            fn zero() -> Self {
-                Self::ZERO
-            }
-        }
-
         impl serde::Serialize for $name
         {
             fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -71,6 +65,17 @@ macro_rules! define_measurement {
                 S: serde::Serializer
             {
                 self.0.serialize(serializer)
+            }
+        }
+
+        impl num_traits::Zero for $name
+        {
+            fn zero() -> Self {
+                Self::ZERO
+            }
+
+            fn is_zero(&self) -> bool {
+                self.0.is_zero()
             }
         }
 
@@ -134,6 +139,12 @@ macro_rules! define_measurement {
             fn mul(self, rhs: f64) -> Self::Output { Self(self.0 * rhs) }
         }
 
+        impl std::ops::MulAssign<f64> for $name {
+            fn mul_assign(&mut self, rhs: f64) {
+                self.0 *= rhs;
+            }
+        }
+
         impl std::ops::Div<f64> for $name {
             type Output = Self;
             fn div(self, rhs: f64) -> Self::Output { Self(self.0 / rhs) }
@@ -142,6 +153,12 @@ macro_rules! define_measurement {
         impl std::ops::Div<$name> for $name {
             type Output = f64;
             fn div(self, rhs: Self) -> Self::Output { self.0 / rhs.0 }
+        }
+
+        impl std::ops::DivAssign<f64> for $name {
+            fn div_assign(&mut self, rhs: f64) {
+                self.0 /= rhs;
+            }
         }
 
         impl std::cmp::Eq for $name {}

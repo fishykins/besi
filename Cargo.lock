@@ -35,6 +35,7 @@ dependencies = [
  "bevy_math",
  "bevy_reflect",
  "inventory",
+ "num-traits",
  "paste",
  "serde",
 ]

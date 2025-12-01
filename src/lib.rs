@@ -35,11 +35,8 @@ pub mod prelude {
     pub use crate::velocity::*;
     pub use crate::volume::*;
 
-    pub use crate::{BesiUnit, ConstZero};
-}
-
-pub trait ConstZero: 'static {
-    fn zero() -> Self;
+    pub use crate::{BesiUnit};
+    pub use num_traits::Zero;
 }
 
 
