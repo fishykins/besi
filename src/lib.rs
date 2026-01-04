@@ -1,5 +1,6 @@
 #[macro_use]
 mod macros;
+pub mod acceleration;
 pub mod angle;
 pub mod density;
 pub mod energy;
@@ -13,12 +14,14 @@ pub mod power;
 pub mod pressure;
 pub mod temperature;
 pub mod time;
+pub mod torque;
 pub mod velocity;
 pub mod volume;
 
 pub(crate) use paste;
 
 pub mod prelude {
+    pub use crate::acceleration::*;
     pub use crate::angle::*;
     pub use crate::density::*;
     pub use crate::energy::*;
@@ -32,6 +35,7 @@ pub mod prelude {
     pub use crate::pressure::*;
     pub use crate::temperature::*;
     pub use crate::time::*;
+    pub use crate::torque::*;
     pub use crate::velocity::*;
     pub use crate::volume::*;
 

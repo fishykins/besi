@@ -6,7 +6,7 @@ define_measurement! {
 }
 
 define_measurement! {
-    /// A measurement of velocity, with a base unit of meters per second.
+    /// A measurement of angular velocity, with a base unit of radians per second.
     AngularVelocity
 }
 
