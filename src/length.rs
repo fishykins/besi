@@ -1,4 +1,6 @@
-use crate::{define_measurement, define_units};
+use std::ops::Mul;
+
+use crate::{define_measurement, define_units, time::Time, velocity::Velocity};
 
 define_measurement! {
     /// A measurement of distance, with a base unit of meters.
@@ -12,6 +14,13 @@ define_units! { Length =>
     kilometer: ("km", 1000.0),
     meter: ("m", 1.0),
     centimeter: ("cm", 0.01),
+}
+
+impl Mul<Time> for Velocity {
+    type Output = Length;
+    fn mul(self, rhs: Time) -> Self::Output {
+        Length(self.0 * rhs.0)
+    }
 }
 
 #[cfg(test)]

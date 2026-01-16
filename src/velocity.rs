@@ -24,6 +24,12 @@ define_units! { AngularVelocity =>
     revolution_per_hour: ("rev/h", 1.745_329_251_994_329_6_E-3),
 }
 
+impl Velocity {
+    /// Returns velocity as a fraction of the speed of light.
+    pub fn as_c(&self) -> f32 {
+        (self.0 / 299_792_458.0) as f32
+    }
+}
 #[cfg(test)]
 mod tests {
     use super::*;
